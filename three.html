@@ -949,6 +949,148 @@
         .toffy-outfit-star {
             filter: drop-shadow(0 0 12px #ffd32a) hue-rotate(50deg) !important;
         }
+
+        /* ================= MOBILE RESPONSIVE ================= */
+        @media (max-width: 768px) {
+            .game-container {
+                padding: 15px;
+            }
+            .level-title {
+                font-size: 24px;
+                margin-bottom: 15px;
+            }
+            .stats-section {
+                flex-direction: row;
+                justify-content: space-around;
+                width: 100%;
+                gap: 10px;
+            }
+            .stat-item {
+                font-size: 14px;
+            }
+            .memory-preview {
+                width: 90%;
+                gap: 8px;
+            }
+            .memory-card {
+                width: 60px;
+                height: 60px;
+                font-size: 24px;
+            }
+            .game-board {
+                gap: 8px;
+                padding: 10px;
+            }
+            .game-card {
+                border-radius: 8px;
+            }
+            .level-select-btn {
+                font-size: 14px;
+                padding: 8px 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body, html {
+                overflow-y: auto;
+            }
+            .game-container {
+                padding: 10px;
+                gap: 10px;
+            }
+            .level-title {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+            .stats-section {
+                gap: 8px;
+                margin-bottom: 10px;
+            }
+            .stat-item {
+                font-size: 12px;
+            }
+            .timer-bar {
+                height: 20px;
+            }
+            .memory-preview {
+                width: 100%;
+                gap: 6px;
+                padding: 8px;
+            }
+            .memory-card {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+            .preview-timer {
+                font-size: 14px;
+            }
+            .game-board {
+                gap: 6px;
+                width: 100%;
+                padding: 8px;
+            }
+            .game-card {
+                border-radius: 6px;
+                border: 3px solid;
+            }
+            .level-select-modal, .shop-modal {
+                width: 95%;
+                max-width: 100%;
+            }
+            .modal-title {
+                font-size: 18px;
+            }
+            .modal-btn {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+            .level-select-btn {
+                font-size: 12px;
+                padding: 10px 12px;
+                min-width: 44px;
+                min-height: 44px;
+            }
+            #toffy-mascot, #fluffy-mascot {
+                height: 60px;
+            }
+            .treasure-chest {
+                font-size: 40px;
+            }
+        }
+        
+        @media (max-width: 320px) {
+            .level-title {
+                font-size: 16px;
+            }
+            .stat-item {
+                font-size: 11px;
+            }
+            .memory-card {
+                width: 35px;
+                height: 35px;
+                font-size: 14px;
+            }
+            .game-card {
+                min-width: 40px;
+                min-height: 40px;
+            }
+            .level-select-btn {
+                font-size: 11px;
+                padding: 8px 10px;
+            }
+        }
+        
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            button, .level-select-btn, .game-card, .memory-card, .modal-btn {
+                min-width: 44px;
+                min-height: 44px;
+            }
+            .game-card, .memory-card {
+                -webkit-tap-highlight-color: transparent;
+            }
+        }
     </style>
 </head>
 <body class="theme-day">

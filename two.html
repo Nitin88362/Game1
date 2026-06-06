@@ -687,6 +687,107 @@
                 width: 78% !important;
             }
         }
+
+        /* ================= MOBILE RESPONSIVE ================= */
+        @media (max-width: 768px) {
+            .game-title {
+                font-size: 28px;
+                margin: 15px 0 10px;
+            }
+            .stat-bar {
+                width: 90%;
+                height: 35px;
+                font-size: 14px;
+            }
+            .stat-label {
+                font-size: 12px;
+            }
+            .game-board {
+                width: 85%;
+                padding: 12px;
+                gap: 10px;
+            }
+            .card {
+                width: 70px;
+                height: 70px;
+                font-size: 28px;
+                border-radius: 8px;
+            }
+            .difficulty-btn {
+                font-size: 12px;
+                padding: 8px 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body, html {
+                overflow-y: auto;
+            }
+            .game-title {
+                font-size: 20px;
+                margin: 10px 0 8px;
+            }
+            .stat-bar {
+                width: 95%;
+                height: 30px;
+                font-size: 12px;
+            }
+            .stat-label {
+                font-size: 10px;
+            }
+            .game-board {
+                width: 100%;
+                padding: 8px;
+                gap: 6px;
+            }
+            .card {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                border-radius: 6px;
+            }
+            .difficulty-btn {
+                font-size: 11px;
+                padding: 6px 10px;
+                border: 2px solid var(--card-border);
+            }
+            .game-modal {
+                width: 95%;
+                max-width: 100%;
+            }
+            .modal-content {
+                padding: 15px;
+            }
+            #toffy-img, #fluffy-img {
+                height: 60px;
+            }
+        }
+        
+        @media (max-width: 320px) {
+            .game-title {
+                font-size: 16px;
+            }
+            .card {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+            .difficulty-btn {
+                font-size: 10px;
+                padding: 5px 8px;
+            }
+        }
+        
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            button, .card, .difficulty-btn {
+                min-width: 44px;
+                min-height: 44px;
+            }
+            .card {
+                -webkit-tap-highlight-color: transparent;
+            }
+        }
     </style>
 </head>
 <body>
