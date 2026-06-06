@@ -689,102 +689,240 @@
         }
 
         /* ================= MOBILE RESPONSIVE ================= */
-        @media (max-width: 768px) {
-            .game-title {
-                font-size: 28px;
-                margin: 15px 0 10px;
+        @media (max-width: 1024px) {
+            .game-wrapper {
+                padding: 15px;
             }
-            .stat-bar {
+            .board-container {
                 width: 90%;
-                height: 35px;
+                padding: 15px 20px;
+                height: 85%;
+            }
+            .fruit-card {
+                width: 150px;
+                height: 150px;
+            }
+            .fruit-emoji-art {
+                font-size: 80px;
+            }
+            .game-title {
+                font-size: 32px;
+            }
+            .mascot-side {
+                width: 200px;
+            }
+            .mascot-image-holder {
+                max-height: 150px;
+            }
+            .minigame-tab {
                 font-size: 14px;
-            }
-            .stat-label {
-                font-size: 12px;
-            }
-            .game-board {
-                width: 85%;
-                padding: 12px;
-                gap: 10px;
-            }
-            .card {
-                width: 70px;
-                height: 70px;
-                font-size: 28px;
-                border-radius: 8px;
-            }
-            .difficulty-btn {
-                font-size: 12px;
-                padding: 8px 14px;
+                padding: 5px 12px;
             }
         }
         
-        @media (max-width: 480px) {
-            body, html {
-                overflow-y: auto;
+        @media (max-width: 768px) {
+            .game-wrapper {
+                padding: 10px;
+            }
+            .header-panel {
+                gap: 8px;
+            }
+            .back-btn {
+                font-size: 14px;
+                padding: 8px 12px;
             }
             .game-title {
-                font-size: 20px;
-                margin: 10px 0 8px;
+                font-size: 24px;
             }
-            .stat-bar {
+            .stars-display {
+                font-size: 16px;
+                padding: 6px 12px;
+            }
+            .board-container {
                 width: 95%;
-                height: 30px;
+                height: 80%;
+                padding: 12px 15px;
+                border: 5px solid var(--card-border);
+                gap: 8px;
+            }
+            .fruit-card {
+                width: 120px;
+                height: 120px;
+                border: 4px solid var(--card-border);
+            }
+            .fruit-emoji-art {
+                font-size: 60px;
+            }
+            .minigame-tab {
                 font-size: 12px;
-            }
-            .stat-label {
-                font-size: 10px;
-            }
-            .game-board {
-                width: 100%;
-                padding: 8px;
-                gap: 6px;
-            }
-            .card {
-                width: 50px;
-                height: 50px;
-                font-size: 20px;
-                border-radius: 6px;
+                padding: 4px 10px;
+                border: 2px solid var(--card-border);
             }
             .difficulty-btn {
                 font-size: 11px;
                 padding: 6px 10px;
-                border: 2px solid var(--card-border);
             }
-            .game-modal {
-                width: 95%;
-                max-width: 100%;
+            .mascot-side {
+                width: 140px;
             }
-            .modal-content {
-                padding: 15px;
+            .mascot-image-holder {
+                max-height: 100px;
             }
-            #toffy-img, #fluffy-img {
-                height: 60px;
+            .mascot-bubble {
+                font-size: 11px;
             }
         }
         
-        @media (max-width: 320px) {
-            .game-title {
-                font-size: 16px;
+        @media (max-width: 600px) {
+            body, html {
+                overflow-y: auto;
+                height: auto;
             }
-            .card {
-                width: 40px;
-                height: 40px;
-                font-size: 16px;
+            .game-wrapper {
+                height: auto;
+                padding: 8px;
+                min-height: 100vh;
+            }
+            .board-container {
+                width: 98%;
+                height: auto;
+                max-height: none;
+                padding: 10px 12px;
+                margin: 10px 0;
+                border: 4px solid var(--card-border);
+            }
+            .game-title {
+                font-size: 20px;
+                margin: 8px 0;
+            }
+            .minigame-selector {
+                gap: 8px;
+                margin-bottom: 10px;
+                flex-wrap: wrap;
+            }
+            .minigame-tab {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+            .fruits-grid {
+                gap: 15px;
+                padding: 8px;
+                max-width: 100%;
+            }
+            .fruit-card {
+                width: 90px;
+                height: 90px;
+                border: 3px solid var(--card-border);
+            }
+            .fruit-emoji-art {
+                font-size: 45px;
+            }
+            .stat-bar {
+                width: 90%;
+                height: 24px;
+            }
+            .stat-label {
+                font-size: 10px;
             }
             .difficulty-btn {
                 font-size: 10px;
                 padding: 5px 8px;
             }
+            .difficulty-group {
+                gap: 6px;
+            }
+            .mascot-side {
+                width: 110px;
+                bottom: 10px;
+            }
+            .mascot-image-holder {
+                max-height: 70px;
+            }
+            .mascot-bubble {
+                font-size: 9px;
+                padding: 5px 8px;
+                max-width: 100px;
+            }
+            #toffy-img, #fluffy-img {
+                height: 50px;
+            }
+        }
+        
+        @media (max-width: 420px) {
+            .game-title {
+                font-size: 18px;
+                margin: 5px 0;
+            }
+            .back-btn {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+            .stars-display {
+                font-size: 14px;
+                padding: 5px 10px;
+            }
+            .board-container {
+                width: 100%;
+                padding: 8px 10px;
+                border: 3px solid var(--card-border);
+            }
+            .fruits-grid {
+                gap: 12px;
+            }
+            .fruit-card {
+                width: 75px;
+                height: 75px;
+                border: 2px solid var(--card-border);
+                box-shadow: 0 6px 0 var(--card-border), 0 8px 12px rgba(0,0,0,0.12);
+            }
+            .fruit-emoji-art {
+                font-size: 36px;
+            }
+            .minigame-tab {
+                font-size: 10px;
+                padding: 3px 6px;
+            }
+            .minigame-selector {
+                gap: 6px;
+            }
+            .difficulty-btn {
+                font-size: 9px;
+                padding: 4px 6px;
+            }
+            .mascot-side {
+                width: 90px;
+            }
+            .mascot-image-holder {
+                max-height: 50px;
+            }
+            #toffy-img, #fluffy-img {
+                height: 40px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .game-title {
+                font-size: 16px;
+            }
+            .fruits-grid {
+                gap: 10px;
+            }
+            .fruit-card {
+                width: 65px;
+                height: 65px;
+            }
+            .fruit-emoji-art {
+                font-size: 30px;
+            }
         }
         
         /* Touch-friendly improvements */
         @media (hover: none) and (pointer: coarse) {
-            button, .card, .difficulty-btn {
+            button, .fruit-card, .minigame-tab, .difficulty-btn {
                 min-width: 44px;
                 min-height: 44px;
             }
-            .card {
+            .fruit-card {
                 -webkit-tap-highlight-color: transparent;
             }
         }
