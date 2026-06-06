@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toffy & Fluffy: Fruit Adventure</title>
+    <!-- Google Fonts for playful text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Lilita+One&family=Bubblegum+Sans&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff5b7f;
+            --secondary-color: #ffc75f;
+            --success-color: #4dd894;
+            --error-color: #ff5e62;
+            --board-bg: #fffbf5;
+            --card-border: #8b5a2b;
+            --text-color: #4a2c11;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Fredoka', sans-serif;
+            overflow: hidden;
+            background-color: #a3e635;
+        }
+
+        /* Blurred Farm Background */
+        .blurred-bg {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            background-image: url('images/farm_background.png');
+            background-size: cover;
+            background-position: center;
+            filter: blur(12px) brightness(0.9);
+            z-index: 1;
+        }
+
+        .game-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Header UI Panel */
+        .header-panel {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .back-btn {
+            font-family: 'Lilita One', cursive;
+            font-size: 20px;
+            color: white;
+            background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+            border: 3px solid var(--card-border);
+            border-radius: 20px;
+            padding: 10px 20px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 var(--card-border);
+            text-shadow: 1px 1px 0 var(--card-border);
+            transition: transform 0.1s, box-shadow 0.1s;
+            text-decoration: none;
+        }
+
+        .back-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 var(--card-border);
+        }
+
+        .game-title {
+            font-family: 'Lilita One', cursive;
+            font-size: 42px;
+            color: #ff4757;
+            margin: 0;
+            text-shadow: 3px 3px 0 #fff, 5px 5px 0 #ffccd5;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .controls-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .control-btn {
+            background: white;
+            border: 3px solid var(--card-border);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 5px 0 var(--card-border);
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .control-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 var(--card-border);
+        }
+
+        .control-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--text-color);
+        }
+
+        /* Language Toggle styling */
+        .lang-btn {
+            font-family: 'Lilita One', cursive;
+            font-size: 18px;
+            background: #ffc75f;
+            color: var(--text-color);
+            border: 3px solid var(--card-border);
+            border-radius: 15px;
+            padding: 5px 12px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 var(--card-border);
+            text-shadow: 1px 1px 0 white;
+            font-weight: bold;
+        }
+        .lang-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 var(--card-border);
+        }
+
+        /* Stars Reward Display */
+        .stars-display {
+            background: white;
+            border: 3px solid var(--card-border);
+            border-radius: 20px;
+            padding: 8px 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Lilita One', cursive;
+            font-size: 22px;
+            color: #ff9f43;
+            box-shadow: 0 5px 0 var(--card-border);
+            text-shadow: 1px 1px 0 var(--card-border);
+        }
+
+        /* Central Game Board */
+        .board-container {
+            width: 60%;
+            max-width: 860px;
+            height: 82%;
+            background-color: var(--board-bg);
+            background-image: radial-gradient(rgba(139, 90, 43, 0.04) 15%, transparent 15%);
+            background-size: 24px 24px;
+            border: 7px solid var(--card-border);
+            border-radius: 40px;
+            box-shadow: 0 16px 0 var(--card-border), 0 25px 40px rgba(0,0,0,0.25);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding: 20px 30px;
+            z-index: 10;
+        }
+
+        /* Mini-Games Selector Bar */
+        .minigame-selector {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .minigame-tab {
+            font-family: 'Lilita One', cursive;
+            font-size: 16px;
+            color: var(--text-color);
+            background: #ffe3b3;
+            border: 3px solid var(--card-border);
+            border-radius: 18px;
+            padding: 6px 15px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 var(--card-border);
+            transition: all 0.2s;
+        }
+
+        .minigame-tab.active {
+            background: #ff5b7f;
+            color: white;
+            box-shadow: none;
+            transform: translateY(4px);
+            text-shadow: 1px 1px 0 var(--card-border);
+        }
+
+        /* Board Content Viewport */
+        .game-viewport {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: visible;
+        }
+
+        /* Fruits Card Grid Layout */
+        .fruits-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            width: 100%;
+            max-width: 850px;
+            padding: 10px;
+        }
+
+        /* Premium Fruit Card Styling - Larger Size! */
+        .fruit-card {
+            background: linear-gradient(135deg, #ffffff, #fffdfa);
+            border: 5px solid var(--card-border);
+            border-radius: 35px;
+            width: 210px;
+            height: 210px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 12px 0 var(--card-border), 0 15px 25px rgba(0,0,0,0.12);
+            position: relative;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .fruit-card:hover {
+            transform: scale(1.06) rotate(1deg);
+        }
+
+        .fruit-card:active {
+            transform: translateY(6px);
+            box-shadow: 0 5px 0 var(--card-border), 0 8px 12px rgba(0,0,0,0.15);
+        }
+
+        .fruit-card.success-flash {
+            border-color: var(--success-color) !important;
+            background: linear-gradient(135deg, #e6fff2, #ffffff) !important;
+        }
+
+        .fruit-card.error-flash {
+            animation: shakeCard 0.5s ease-in-out;
+            border-color: var(--error-color) !important;
+        }
+
+        .fruit-img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            filter: drop-shadow(0 8px 10px rgba(0,0,0,0.14));
+            transform: scale(1.3);
+            transition: transform 0.2s;
+        }
+
+        .fruit-emoji-art {
+            font-size: 120px;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));
+            display: inline-block;
+        }
+
+        /* Giant active speech mascot guide - Absolute Floating! */
+        .mascot-side {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 280px; /* Larger */
+            z-index: 100;
+            pointer-events: none;
+            bottom: 20px; /* Sits at the bottom */
+            top: auto;
+            transform: none;
+        }
+
+        .mascot-side.left {
+            left: 20px;
+        }
+
+        .mascot-side.right {
+            right: 20px; /* Sits on the right */
+        }
+
+        .mascot-side .mascot-bubble {
+            pointer-events: auto;
+        }
+
+        .mascot-image-holder {
+            width: 100%;
+            height: auto;
+            max-height: 420px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: auto;
+            cursor: pointer;
+            filter: drop-shadow(0 10px 16px rgba(0,0,0,0.2));
+            animation: floatMascot 4s infinite ease-in-out;
+        }
+
+        .mascot-image-holder img {
+            width: 100%;
+            height: auto;
+            max-height: 400px; /* Larger */
+            border-radius: 24px; /* Rounded corners for the raw image */
+            border: 4px solid var(--card-border); /* Matching border */
+        }
+
+        .mascot-bubble {
+            background: white;
+            border: 3px solid var(--card-border);
+            border-radius: 20px;
+            padding: 12px 18px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-color);
+            position: relative;
+            margin-bottom: 12px;
+            box-shadow: 0 6px 0 rgba(0,0,0,0.08);
+            max-width: 210px;
+            text-align: center;
+        }
+
+        .mascot-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 12px 10px 0;
+            border-style: solid;
+            border-color: white transparent;
+            display: block;
+            width: 0;
+        }
+
+        .mascot-bubble::before {
+            content: '';
+            position: absolute;
+            bottom: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 13px 11px 0;
+            border-style: solid;
+            border-color: var(--card-border) transparent;
+            display: block;
+            width: 0;
+            z-index: -1;
+        }
+
+        /* Difficulty selection footer tabs */
+        .difficulty-panel {
+            display: flex;
+            gap: 15px;
+            z-index: 10;
+        }
+
+        .diff-btn {
+            font-family: 'Lilita One', cursive;
+            font-size: 20px;
+            color: var(--text-color);
+            background: white;
+            border: 3px solid var(--card-border);
+            border-radius: 25px;
+            padding: 10px 30px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 var(--card-border);
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .diff-btn.active {
+            background: #ffc75f;
+            transform: translateY(3px);
+            box-shadow: 0 3px 0 var(--card-border);
+        }
+
+        /* Hard Mode Timer Bar */
+        .timer-container {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin-top: 10px;
+            display: none;
+            overflow: hidden;
+            border: 2px solid var(--card-border);
+        }
+
+        .timer-bar {
+            height: 100%;
+            background: var(--error-color);
+            width: 100%;
+            transition: width 1s linear;
+        }
+
+        /* ================= OVERLAYS ================= */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Modal Box */
+        .modal-card {
+            background: white;
+            border: 6px solid var(--card-border);
+            border-radius: 40px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 0 var(--card-border), 0 30px 45px rgba(0,0,0,0.4);
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-title {
+            font-family: 'Lilita One', cursive;
+            font-size: 38px;
+            color: #ff5b7f;
+            margin: 0 0 20px 0;
+            text-shadow: 2px 2px 0 #ffe0e6;
+        }
+
+        .modal-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .modal-tab {
+            font-family: 'Lilita One', cursive;
+            font-size: 18px;
+            padding: 8px 20px;
+            background: #ffe3b3;
+            border: 3px solid var(--card-border);
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .modal-tab.active {
+            background: #ffc75f;
+        }
+
+        .modal-content {
+            max-height: 280px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        /* Shop Grid */
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .shop-item {
+            background: #fffbf2;
+            border: 3px solid var(--card-border);
+            border-radius: 20px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .shop-item.locked {
+            filter: grayscale(0.85);
+            opacity: 0.8;
+        }
+
+        .shop-item:hover:not(.locked) {
+            transform: scale(1.05);
+        }
+
+        .shop-item.active-mascot {
+            background: #e6fff2;
+            border-color: var(--success-color);
+        }
+
+        .shop-item-preview {
+            font-size: 50px;
+            margin-bottom: 5px;
+        }
+
+        .shop-item-name {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        .shop-item-cost {
+            font-family: 'Lilita One', cursive;
+            font-size: 13px;
+            color: #ff9f43;
+            margin-top: 5px;
+        }
+
+        .sticker-badge {
+            background: #ffe6e6;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            box-shadow: 0 4px 0 rgba(0,0,0,0.06);
+            border: 3px solid #ffccd5;
+        }
+
+        .close-modal-btn {
+            font-family: 'Lilita One', cursive;
+            font-size: 22px;
+            color: white;
+            background: linear-gradient(135deg, #0be881, #05c46b);
+            border: 4px solid var(--card-border);
+            border-radius: 30px;
+            padding: 8px 35px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 var(--card-border);
+            margin-top: 20px;
+        }
+
+        /* Particle Stars */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 210;
+            animation: blowParticle 0.8s ease-out forwards;
+        }
+
+        /* Shadow match silhouette */
+        .shadow-mode-silhouette {
+            font-size: 100px !important;
+            filter: brightness(0) !important;
+        }
+
+        .shadow-holder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(139, 90, 43, 0.08);
+            border: 4px dashed var(--card-border);
+            border-radius: 35px;
+            padding: 15px;
+            width: 170px;
+            height: 170px;
+            margin-bottom: 15px;
+        }
+
+        /* Size compare layout */
+        .size-compare-container {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Canvas confetti overlay */
+        #confetti-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 201;
+            pointer-events: none;
+        }
+
+        /* ================= ANIMATION KEYFRAMES ================= */
+        @keyframes floatMascot {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(-1.5deg); }
+        }
+
+        @keyframes bounceFruit {
+            0%, 100% { transform: scale(1) translateY(0); }
+            30% { transform: scale(1.15, 0.85) translateY(0); }
+            50% { transform: scale(0.9, 1.1) translateY(-40px); }
+            70% { transform: scale(1.05, 0.95) translateY(0); }
+        }
+
+        @keyframes danceFruit {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(-18deg) scale(1.08); }
+            75% { transform: rotate(18deg) scale(1.08); }
+        }
+
+        @keyframes jumpFruit {
+            0%, 100% { transform: translateY(0) scaleY(1); }
+            40% { transform: translateY(-60px) scaleY(1.15); }
+            60% { transform: translateY(12px) scaleY(0.85); }
+        }
+
+        @keyframes rotateFruit {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes shakeCard {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+
+        @keyframes blowParticle {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0) rotate(180deg); opacity: 0; }
+        }
+
+        .anim-bounce { animation: bounceFruit 0.7s ease-out; }
+        .anim-dance { animation: danceFruit 0.8s ease-in-out; }
+        .anim-jump { animation: jumpFruit 0.8s ease-in-out; }
+        .anim-rotate { animation: rotateFruit 0.6s linear; }
+
+        .bounce-mascot {
+            animation: bounceFruit 0.8s ease-out !important;
+        }
+        .shake-mascot {
+            animation: shakeCard 0.5s ease-in-out !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 1300px) {
+            .mascot-side {
+                width: 180px;
+            }
+            .mascot-side.left {
+                left: 10px;
+            }
+            .mascot-image-holder {
+                max-height: 240px;
+            }
+            .mascot-bubble {
+                font-size: 14px;
+                padding: 8px 12px;
+                max-width: 155px;
+            }
+            .board-container {
+                width: 78% !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="blurred-bg"></div>
+
+    <div class="game-wrapper">
+        <!-- Header Controls -->
+        <div class="header-panel">
+            <a href="one.html" class="back-btn">➔ MATCH GAME</a>
+            <h1 class="game-title">FRUIT ADVENTURE</h1>
+            <div class="controls-right">
+                <a href="three.html" class="back-btn" style="background: linear-gradient(135deg, #0be881, #05c46b); margin-right: 5px;">NEXT GAME ➔</a>
+                <button class="lang-btn" onclick="toggleLanguage()" id="lang-btn">EN</button>
+                <button class="control-btn" onclick="toggleMute()" id="sound-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                    </svg>
+                </button>
+                <div class="stars-display">
+                    <span>⭐</span>
+                    <span id="star-count">0</span>
+                </div>
+                <button class="control-btn" onclick="openShop()" style="background:#ffccd5;">
+                    <span style="font-size:22px;">🛒</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Float Mascot Guides: Toffy (Left) & Fluffy (Right) -->
+        <div class="mascot-side left" id="toffy-side">
+            <div class="mascot-bubble" id="toffy-bubble">Hello! Let's play a fruit adventure! 🍎</div>
+            <div class="mascot-image-holder" id="toffy-holder" onclick="speakQuestion()">
+                <img id="toffy-img" src="images/toffy_premium.png" alt="Toffy">
+            </div>
+        </div>
+
+        <div class="mascot-side right" id="fluffy-side">
+            <div class="mascot-bubble" id="fluffy-bubble">Hello! Let's play a fruit adventure! 🍎</div>
+            <div class="mascot-image-holder" id="fluffy-holder" onclick="speakQuestion()">
+                <img id="fluffy-img" src="images/fluffy_premium.png" alt="Fluffy">
+            </div>
+        </div>
+
+        <!-- Central Board -->
+        <div class="board-container">
+            <!-- Mini Games Selector Tab -->
+            <div class="minigame-selector">
+                <button class="minigame-tab active" onclick="selectMiniGame('find')" id="tab-find">🍎 FIND FRUIT</button>
+                <button class="minigame-tab" onclick="selectMiniGame('size')" id="tab-size">📏 COMPARE SIZE</button>
+                <button class="minigame-tab" onclick="selectMiniGame('odd')" id="tab-odd">🍓 ODD ONE OUT</button>
+                <button class="minigame-tab" onclick="selectMiniGame('shadow')" id="tab-shadow">👤 SHADOW MATCH</button>
+            </div>
+
+            <!-- Main active gameplay viewport -->
+            <div class="game-viewport" id="game-viewport">
+                <!-- Injected dynamically -->
+            </div>
+
+            <!-- Timer Bar for Hard Mode -->
+            <div class="timer-container" id="timer-container">
+                <div class="timer-bar" id="timer-bar"></div>
+            </div>
+        </div>
+
+        <!-- Difficulty Panel Footer -->
+        <div class="difficulty-panel">
+            <button class="diff-btn active" onclick="setDifficulty('easy')" id="diff-easy">EASY</button>
+            <button class="diff-btn" onclick="setDifficulty('medium')" id="diff-medium">MEDIUM</button>
+            <button class="diff-btn" onclick="setDifficulty('hard')" id="diff-hard">HARD</button>
+        </div>
+    </div>
+
+    <!-- Canvas Confetti Overlay -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Character & Sticker Shop Modal -->
+    <div class="overlay" id="shop-overlay">
+        <div class="modal-card">
+            <h2 class="modal-title">COLLECTION & SHOP</h2>
+            <div class="modal-tabs">
+                <button class="modal-tab active" onclick="selectShopTab('characters')" id="tab-chars">CHARACTERS</button>
+                <button class="modal-tab" onclick="selectShopTab('stickers')" id="tab-stickers">STICKER BOOK</button>
+            </div>
+
+            <!-- Modal Content area -->
+            <div class="modal-content" id="modal-content">
+                <!-- Shop items injected here -->
+            </div>
+
+            <button class="close-modal-btn" onclick="closeShop()">CLOSE</button>
+        </div>
+    </div>
+
+    <!-- Game Logic Script -->
+    <script>
+        // Fruit data templates with English/Hindi translations and emoji representations
+        const fruits = [
+            { id: 'apple', en: 'Apple', hi: 'सेब', emoji: '🍎', anim: 'anim-bounce', img: 'images/apple_premium.png' },
+            { id: 'banana', en: 'Banana', hi: 'केला', emoji: '🍌', anim: 'anim-dance', img: 'images/banana_premium.png' },
+            { id: 'watermelon', en: 'Watermelon', hi: 'Watermelon', hi_t: 'तरबूज', emoji: '🍉', anim: 'anim-jump', img: null },
+            { id: 'strawberry', en: 'Strawberry', hi: 'Strawberry', hi_t: 'स्ट्रॉबेरी', emoji: '🍓', anim: 'anim-bounce', img: null },
+            { id: 'orange', en: 'Orange', hi: 'Orange', hi_t: 'संतरा', emoji: '🍊', anim: 'anim-rotate', img: null },
+            { id: 'grapes', en: 'Grapes', hi: 'Grapes', hi_t: 'अंगूर', emoji: '🍇', anim: 'anim-jump', img: null },
+            { id: 'pineapple', en: 'Pineapple', hi: 'Pineapple', hi_t: 'अनानास', emoji: '🍍', anim: 'anim-bounce', img: null },
+            { id: 'mango', en: 'Mango', hi: 'Mango', hi_t: 'आम', emoji: '🥭', anim: 'anim-dance', img: null }
+        ];
+
+        // Characters list
+        const characters = [
+            { id: 'toffy', name: 'Toffy', emoji: '🐱', img: 'images/toffy_premium.png', cost: 0 },
+            { id: 'fluffy', name: 'Fluffy', emoji: '🐱', img: 'images/fluffy_premium.png', cost: 0 },
+            { id: 'bunny', name: 'Bunny', emoji: '🐰', img: null, cost: 20 },
+            { id: 'panda', name: 'Panda', emoji: '🐼', img: null, cost: 30 },
+            { id: 'fox', name: 'Fox', emoji: '🦊', img: null, cost: 40 },
+            { id: 'teddy', name: 'Teddy', emoji: '🐻', img: null, cost: 50 }
+        ];
+
+        // Stickers list
+        const stickers = [
+            { id: 'apple_sticker', emoji: '🍎', name: 'Super Apple', cost: 5 },
+            { id: 'banana_sticker', emoji: '🍌', name: 'Dancing Banana', cost: 15 },
+            { id: 'watermelon_sticker', emoji: '🍉', name: 'Jumping Watermelon', cost: 25 },
+            { id: 'grapes_sticker', emoji: '🍇', name: 'Sweet Grapes', cost: 35 },
+            { id: 'gold_trophy', emoji: '🏆', name: 'Gold Trophy', cost: 50 }
+        ];
+
+        // Game State Variables
+        let stars = parseInt(localStorage.getItem('fruit_stars') || '0');
+        let unlockedChars = JSON.parse(localStorage.getItem('unlocked_chars') || '["toffy","fluffy"]');
+        let unlockedStickers = JSON.parse(localStorage.getItem('unlocked_stickers') || '[]');
+        let activeCharId = localStorage.getItem('active_mascot') || 'toffy';
+        
+        let activeGameMode = 'find'; // find, size, odd, shadow
+        let activeDifficulty = 'easy'; // easy, medium, hard
+        let language = 'EN'; // EN, HI
+        let soundEnabled = true;
+        let audioCtx = null;
+
+        // Active Question state
+        let currentTargetFruit = null;
+        let currentOptions = [];
+        let timerInterval = null;
+        let timeLeft = 0;
+        const totalTime = 12; // 12 seconds countdown for hard mode
+
+        // Confetti pieces variables
+        let confettiActive = false;
+        const confettiPieces = [];
+
+        // Pre-warm Web Speech voices list on startup
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.getVoices();
+            if (window.speechSynthesis.onvoiceschanged !== undefined) {
+                window.speechSynthesis.onvoiceschanged = () => {
+                    window.speechSynthesis.getVoices();
+                };
+            }
+        }
+
+        // Initalizer
+        window.addEventListener('DOMContentLoaded', () => {
+            updateStarsUI();
+            setMascot(activeCharId);
+            selectMiniGame('find');
+        });
+
+        // Initialize audio context
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // play small tone
+        function playNote(freq, duration, type = 'sine') {
+            if (!soundEnabled) return;
+            initAudio();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        // Play chime (Correct)
+        function playSuccessSound() {
+            const now = audioCtx ? audioCtx.currentTime : 0;
+            playNote(523.25, 0.15); // C5
+            setTimeout(() => playNote(659.25, 0.15), 100); // E5
+            setTimeout(() => playNote(783.99, 0.3), 200); // G5
+        }
+
+        // Play buzz (Wrong)
+        function playWrongSound() {
+            playNote(150, 0.2, 'sawtooth');
+        }
+
+        // Speaks voice
+        function speakVoice(text) {
+            if (!soundEnabled) return;
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 1.0;
+                utterance.pitch = 1.2;
+                utterance.lang = language === 'EN' ? 'en-US' : 'hi-IN';
+
+                // Locate a suitable voice (handles 'hi' / 'hi-in' / 'hindi' in case-insensitive and safe way)
+                const voices = window.speechSynthesis.getVoices();
+                const selectedVoice = voices.find(voice => 
+                    voice && voice.lang && (
+                        voice.lang.toLowerCase().startsWith(language.toLowerCase()) ||
+                        (language === 'HI' && (
+                            voice.lang.toLowerCase().includes('hi') ||
+                            voice.name.toLowerCase().includes('hindi')
+                        ))
+                    )
+                );
+                if (selectedVoice) utterance.voice = selectedVoice;
+                
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Toggle Sound Mute
+        function toggleMute() {
+            soundEnabled = !soundEnabled;
+            const icon = document.querySelector('#sound-btn svg');
+            if (soundEnabled) {
+                icon.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+                initAudio();
+            } else {
+                icon.innerHTML = '<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.21.05-.42.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>';
+                if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            }
+        }
+
+        // Toggle Language Mode
+        function toggleLanguage() {
+            language = language === 'EN' ? 'HI' : 'EN';
+            document.getElementById('lang-btn').innerText = language;
+            generateChallenge();
+        }
+
+        // Set Guide Mascot (No dynamic swap needed since both are persistent)
+        function setMascot(charId) {
+            let char = characters.find(c => c.id === charId);
+            if (!char) {
+                charId = 'toffy';
+            }
+            activeCharId = charId;
+            localStorage.setItem('active_mascot', charId);
+        }
+
+        // Helper to update bubble texts on both mascots
+        function updateMascotBubble(text) {
+            const toffy = document.getElementById('toffy-bubble');
+            const fluffy = document.getElementById('fluffy-bubble');
+            if (toffy) toffy.innerText = text;
+            if (fluffy) fluffy.innerText = text;
+        }
+
+        // Helper to animate both mascots
+        function animateMascots(className) {
+            const toffy = document.getElementById('toffy-holder');
+            const fluffy = document.getElementById('fluffy-holder');
+            if (toffy) {
+                toffy.classList.add(className);
+                setTimeout(() => toffy.classList.remove(className), 800);
+            }
+            if (fluffy) {
+                fluffy.classList.add(className);
+                setTimeout(() => fluffy.classList.remove(className), 800);
+            }
+        }
+
+        // Update Stars Count
+        function updateStarsUI() {
+            document.getElementById('star-count').innerText = stars;
+            localStorage.setItem('fruit_stars', stars);
+            
+            // Check auto unlocks
+            let changed = false;
+            characters.forEach(c => {
+                if (c.cost > 0 && stars >= c.cost && !unlockedChars.includes(c.id)) {
+                    unlockedChars.push(c.id);
+                    changed = true;
+                }
+            });
+            stickers.forEach(s => {
+                if (stars >= s.cost && !unlockedStickers.includes(s.id)) {
+                    unlockedStickers.push(s.id);
+                    changed = true;
+                }
+            });
+
+            if (changed) {
+                localStorage.setItem('unlocked_chars', JSON.stringify(unlockedChars));
+                localStorage.setItem('unlocked_stickers', JSON.stringify(unlockedStickers));
+            }
+        }
+
+        // Speak active question
+        function speakQuestion() {
+            const bubbleText = document.getElementById('toffy-bubble').innerText;
+            speakVoice(bubbleText);
+        }
+
+        // Select Game Mode
+        function selectMiniGame(mode) {
+            activeGameMode = mode;
+            
+            // Update tabs
+            document.querySelectorAll('.minigame-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(`tab-${mode}`).classList.add('active');
+
+            generateChallenge();
+        }
+
+        // Set Difficulty
+        function setDifficulty(diff) {
+            activeDifficulty = diff;
+
+            // Update footer
+            document.querySelectorAll('.diff-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`diff-${diff}`).classList.add('active');
+
+            generateChallenge();
+        }
+
+        // Shuffle helper
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        // Generate challenge based on mode & difficulty
+        function generateChallenge() {
+            // Stop existing timer
+            clearInterval(timerInterval);
+            document.getElementById('timer-container').style.display = 'none';
+
+            const viewport = document.getElementById('game-viewport');
+            viewport.innerHTML = '';
+
+            // Get number of options to show based on difficulty
+            let optionsCount = 3;
+            if (activeDifficulty === 'medium') optionsCount = 5;
+            if (activeDifficulty === 'hard') optionsCount = 8;
+
+            if (activeGameMode === 'find') {
+                setupFindGame(viewport, optionsCount);
+            } else if (activeGameMode === 'size') {
+                setupSizeGame(viewport);
+            } else if (activeGameMode === 'odd') {
+                setupOddGame(viewport);
+            } else if (activeGameMode === 'shadow') {
+                setupShadowGame(viewport, optionsCount);
+            }
+
+            // Setup timer if Hard mode
+            if (activeDifficulty === 'hard') {
+                setupHardModeTimer();
+            }
+
+            // Speak question
+            setTimeout(speakQuestion, 400);
+        }
+
+        // 1. Setup FIND GAME Mode
+        function setupFindGame(viewport, count) {
+            const shufFruits = shuffle([...fruits]);
+            currentTargetFruit = shufFruits[0];
+            
+            // Get options
+            currentOptions = shufFruits.slice(0, count);
+            shuffle(currentOptions);
+
+            // Mascot Question text
+            const guide = characters.find(c => c.id === activeCharId);
+            const questionEn = `Click on the ${currentTargetFruit.en}! 🍎`;
+            const questionHi = `${currentTargetFruit.hi_t || currentTargetFruit.hi} पर क्लिक करो! 🍎`;
+            
+            updateMascotBubble(language === 'EN' ? questionEn : questionHi);
+
+            // Render cards
+            const grid = document.createElement('div');
+            grid.className = `fruits-grid diff-${activeDifficulty}`;
+            
+            currentOptions.forEach(fruit => {
+                const card = document.createElement('div');
+                card.className = 'fruit-card';
+                card.onclick = () => handleFruitClick(fruit, card);
+
+                if (fruit.img) {
+                    card.innerHTML = `<img src="${fruit.img}" class="fruit-img" alt="${fruit.en}">`;
+                } else {
+                    card.innerHTML = `<span class="fruit-emoji-art">${fruit.emoji}</span>`;
+                }
+                grid.appendChild(card);
+            });
+            viewport.appendChild(grid);
+        }
+
+        // 2. Setup SIZE COMPARE Mode
+        function setupSizeGame(viewport) {
+            const shufFruits = shuffle([...fruits]);
+            const targetFruit = shufFruits[0];
+            const sizeGoal = Math.random() > 0.5 ? 'biggest' : 'smallest';
+
+            // Question
+            let qText = '';
+            if (language === 'EN') {
+                qText = `Find the ${sizeGoal} ${targetFruit.en}! 📏`;
+            } else {
+                qText = `सबसे ${sizeGoal === 'biggest' ? 'बड़ा' : 'छोटा'} ${targetFruit.hi_t || targetFruit.hi} ढूँढो! 📏`;
+            }
+            updateMascotBubble(qText);
+
+            // Render three cards with different sizes
+            const container = document.createElement('div');
+            container.className = 'size-compare-container';
+
+            const sizes = [0.6, 1.0, 1.4]; // small, medium, large
+            const shuffledSizes = shuffle([...sizes]);
+
+            // Calculate correct target
+            let correctSize = sizeGoal === 'biggest' ? 1.4 : 0.6;
+
+            shuffledSizes.forEach(scale => {
+                const card = document.createElement('div');
+                card.className = 'fruit-card';
+                card.style.transform = `scale(${scale})`;
+                
+                // Keep box shadow size consistent with scale
+                card.style.boxShadow = `0 ${10 * scale}px 0 var(--card-border)`;
+
+                card.onclick = () => {
+                    if (scale === correctSize) {
+                        handleCorrect(card, targetFruit);
+                    } else {
+                        handleWrong(card);
+                    }
+                };
+
+                if (targetFruit.img) {
+                    card.innerHTML = `<img src="${targetFruit.img}" class="fruit-img" style="transform:scale(1)">`;
+                } else {
+                    card.innerHTML = `<span class="fruit-emoji-art">${targetFruit.emoji}</span>`;
+                }
+
+                container.appendChild(card);
+            });
+
+            viewport.appendChild(container);
+        }
+
+        // 3. Setup ODD ONE OUT Mode
+        function setupOddGame(viewport) {
+            const shufFruits = shuffle([...fruits]);
+            const mainFruit = shufFruits[0];
+            const oddFruit = shufFruits[1];
+
+            // Question
+            let qText = language === 'EN' ? `Find the different fruit! 🍓` : `अलग फल को ढूँढो! 🍓`;
+            updateMascotBubble(qText);
+
+            const grid = document.createElement('div');
+            grid.className = `fruits-grid diff-${activeDifficulty}`;
+
+            const cardsData = [mainFruit, mainFruit, mainFruit, oddFruit];
+            shuffle(cardsData);
+
+            cardsData.forEach(fruit => {
+                const card = document.createElement('div');
+                card.className = 'fruit-card';
+                
+                card.onclick = () => {
+                    if (fruit.id === oddFruit.id) {
+                        handleCorrect(card, oddFruit);
+                    } else {
+                        handleWrong(card);
+                    }
+                };
+
+                if (fruit.img) {
+                    card.innerHTML = `<img src="${fruit.img}" class="fruit-img">`;
+                } else {
+                    card.innerHTML = `<span class="fruit-emoji-art">${fruit.emoji}</span>`;
+                }
+                grid.appendChild(card);
+            });
+
+            viewport.appendChild(grid);
+        }
+
+        // 4. Setup SHADOW MATCH Mode
+        function setupShadowGame(viewport, count) {
+            const shufFruits = shuffle([...fruits]);
+            currentTargetFruit = shufFruits[0];
+
+            // Question
+            let qText = language === 'EN' ? `Match the shadow! 👤` : `परछाईं का मिलान करो! 👤`;
+            updateMascotBubble(qText);
+
+            const holder = document.createElement('div');
+            holder.style.display = 'flex';
+            holder.style.flexDirection = 'column';
+            holder.style.alignItems = 'center';
+
+            // Shadow panel
+            const shadowHolder = document.createElement('div');
+            shadowHolder.className = 'shadow-holder';
+            if (currentTargetFruit.img) {
+                shadowHolder.innerHTML = `<img src="${currentTargetFruit.img}" class="fruit-img" style="filter: brightness(0)">`;
+            } else {
+                shadowHolder.innerHTML = `<span class="fruit-emoji-art shadow-mode-silhouette">${currentTargetFruit.emoji}</span>`;
+            }
+            holder.appendChild(shadowHolder);
+
+            // Cards row
+            currentOptions = shufFruits.slice(0, count);
+            shuffle(currentOptions);
+
+            const grid = document.createElement('div');
+            grid.className = `fruits-grid diff-${activeDifficulty}`;
+            grid.style.marginTop = '10px';
+
+            currentOptions.forEach(fruit => {
+                const card = document.createElement('div');
+                card.className = 'fruit-card';
+                card.onclick = () => handleFruitClick(fruit, card);
+
+                if (fruit.img) {
+                    card.innerHTML = `<img src="${fruit.img}" class="fruit-img">`;
+                } else {
+                    card.innerHTML = `<span class="fruit-emoji-art">${fruit.emoji}</span>`;
+                }
+                grid.appendChild(card);
+            });
+
+            holder.appendChild(grid);
+            viewport.appendChild(holder);
+        }
+
+        // Hard mode Countdown Timer
+        function setupHardModeTimer() {
+            const timerContainer = document.getElementById('timer-container');
+            const timerBar = document.getElementById('timer-bar');
+
+            timerContainer.style.display = 'block';
+            timerBar.style.width = '100%';
+            timeLeft = totalTime;
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const pct = (timeLeft / totalTime) * 100;
+                timerBar.style.width = `${pct}%`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    // Time's up!
+                    playWrongSound();
+                    
+                    const msg = language === 'EN' ? "Time's up! Let's try another one!" : "समय समाप्त! अगला प्रयास करें!";
+                    updateMascotBubble(msg);
+                    speakVoice(msg);
+
+                    animateMascots('shake-mascot');
+
+                    // Re-challenge
+                    setTimeout(generateChallenge, 2200);
+                }
+            }, 1000);
+        }
+
+        // Handle Fruit Click in Find/Shadow game
+        function handleFruitClick(fruit, cardEl) {
+            if (fruit.id === currentTargetFruit.id) {
+                handleCorrect(cardEl, fruit);
+            } else {
+                handleWrong(cardEl);
+            }
+        }
+
+        // Handle Correct Match Click
+        function handleCorrect(cardEl, fruit) {
+            clearInterval(timerInterval);
+            cardEl.classList.add('success-flash');
+            
+            // Speak fruit name
+            const spokenName = language === 'EN' ? fruit.en : (fruit.hi_t || fruit.hi);
+            speakVoice(spokenName);
+
+            // Animate card item
+            const artEl = cardEl.querySelector('.fruit-emoji-art') || cardEl.querySelector('.fruit-img');
+            artEl.classList.add(fruit.anim || 'anim-bounce');
+
+            // Guide cheers
+            const successTextsEn = ["Excellent! 🎉", "Wow! You did it! 🌟", "Great job! 🏆"];
+            const successTextsHi = ["बहुत बढ़िया! 🎉", "अद्भुत! आपने कर दिखाया! 🌟", "शानदार! 🏆"];
+            
+            const randomMsg = language === 'EN' 
+                ? successTextsEn[Math.floor(Math.random() * successTextsEn.length)] 
+                : successTextsHi[Math.floor(Math.random() * successTextsHi.length)];
+
+            setTimeout(() => {
+                updateMascotBubble(randomMsg);
+                speakVoice(randomMsg);
+                playSuccessSound();
+                
+                // Mascot animation
+                animateMascots('bounce-mascot');
+                
+                // Explosion particles
+                spawnParticles(cardEl);
+                
+                // Trigger Confetti
+                triggerConfetti();
+
+                // Increment Star reward
+                stars++;
+                updateStarsUI();
+
+                // Next challenge after delay
+                setTimeout(generateChallenge, 1800);
+            }, 550);
+        }
+
+        // Handle Wrong Match Click
+        function handleWrong(cardEl) {
+            cardEl.classList.add('error-flash');
+            playWrongSound();
+
+            const failMsg = language === 'EN' ? "Try Again! 🐣" : "फिर से प्रयास करो! 🐣";
+            updateMascotBubble(failMsg);
+            speakVoice(failMsg);
+
+            // Mascot shakes
+            animateMascots('shake-mascot');
+
+            setTimeout(() => {
+                cardEl.classList.remove('error-flash');
+            }, 600);
+        }
+
+        // Star explosion particles
+        function spawnParticles(targetEl) {
+            const rect = targetEl.getBoundingClientRect();
+            const px = rect.left + rect.width / 2;
+            const py = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 15; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = `${px}px`;
+                p.style.top = `${py}px`;
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 50 + Math.random() * 85;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                p.style.setProperty('--tx', `${tx}px`);
+                p.style.setProperty('--ty', `${ty}px`);
+
+                p.innerHTML = `
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="${getRandomColor()}">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                `;
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 800);
+            }
+        }
+
+        function getRandomColor() {
+            return ['#ffd166', '#0be881', '#ff5b7f', '#3498db', '#a3e635'][Math.floor(Math.random() * 5)];
+        }
+
+        // ================= CONFETTI CELEBRATION =================
+        function triggerConfetti() {
+            confettiActive = true;
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            confettiPieces.length = 0;
+            for (let i = 0; i < 60; i++) {
+                confettiPieces.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    size: 6 + Math.random() * 8,
+                    color: getRandomColor(),
+                    speed: 3 + Math.random() * 4,
+                    angle: Math.random() * 360,
+                    spin: -2 + Math.random() * 4
+                });
+            }
+
+            let frames = 0;
+            function drawFrame() {
+                if (!confettiActive) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                confettiPieces.forEach(p => {
+                    p.y += p.speed;
+                    p.angle += p.spin;
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.angle * Math.PI / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    ctx.restore();
+                });
+
+                frames++;
+                if (frames < 70) {
+                    requestAnimationFrame(drawFrame);
+                } else {
+                    confettiActive = false;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+            requestAnimationFrame(drawFrame);
+        }
+
+        // ================= REWARD SHOP MODAL =================
+        let shopActiveTab = 'characters';
+
+        function openShop() {
+            document.getElementById('shop-overlay').classList.add('active');
+            renderShop();
+        }
+
+        function closeShop() {
+            document.getElementById('shop-overlay').classList.remove('active');
+        }
+
+        function selectShopTab(tab) {
+            shopActiveTab = tab;
+            document.getElementById('tab-chars').classList.remove('active');
+            document.getElementById('tab-stickers').classList.remove('active');
+
+            if (tab === 'characters') {
+                document.getElementById('tab-chars').classList.add('active');
+            } else {
+                document.getElementById('tab-stickers').classList.add('active');
+            }
+            renderShop();
+        }
+
+        function renderShop() {
+            const content = document.getElementById('modal-content');
+            content.innerHTML = '';
+
+            if (shopActiveTab === 'characters') {
+                const grid = document.createElement('div');
+                grid.className = 'shop-grid';
+                
+                characters.forEach(c => {
+                    const item = document.createElement('div');
+                    const isLocked = !unlockedChars.includes(c.id);
+                    item.className = `shop-item ${isLocked ? 'locked' : ''} ${c.id === activeCharId ? 'active-mascot' : ''}`;
+                    
+                    if (isLocked) {
+                        item.innerHTML = `
+                            <div class="shop-item-preview">🔒</div>
+                            <div class="shop-item-name">${c.name}</div>
+                            <div class="shop-item-cost">⭐ ${c.cost} Stars</div>
+                        `;
+                    } else {
+                        item.innerHTML = `
+                            <div class="shop-item-preview">${c.emoji}</div>
+                            <div class="shop-item-name">${c.name}</div>
+                            <div class="shop-item-cost" style="color:#0be881;">Unlocked</div>
+                        `;
+                        item.onclick = () => {
+                            setMascot(c.id);
+                            renderShop();
+                        };
+                    }
+                    grid.appendChild(item);
+                });
+                content.appendChild(grid);
+            } else {
+                const grid = document.createElement('div');
+                grid.className = 'shop-grid';
+                
+                stickers.forEach(s => {
+                    const item = document.createElement('div');
+                    const isLocked = !unlockedStickers.includes(s.id);
+                    item.className = `shop-item ${isLocked ? 'locked' : ''}`;
+                    
+                    item.innerHTML = `
+                        <div class="sticker-badge">${s.emoji}</div>
+                        <div class="shop-item-name" style="margin-top:10px;">${s.name}</div>
+                        <div class="shop-item-cost">${isLocked ? `⭐ ${s.cost} Stars` : 'Unlocked 🎁'}</div>
+                    `;
+                    grid.appendChild(item);
+                });
+                content.appendChild(grid);
+            }
+        }
+    </script>
+</body>
+</html>
