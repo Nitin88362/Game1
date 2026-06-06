@@ -60,6 +60,14 @@
             overflow: hidden;
             background-color: var(--sky-color-2);
         }
+        
+        @media (max-width: 768px) {
+            body, html {
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto;
+            }
+        }
 
         /* Dynamic Animated Beach Background */
         .beach-bg {
@@ -1207,6 +1215,24 @@
             }
             #toffy-mascot, #fluffy-mascot {
                 height: 35px;
+            }
+        }
+        
+        /* CRITICAL MOBILE OVERFLOW FIX */
+        @media (max-width: 768px) {
+            * {
+                -webkit-overflow-scrolling: touch;
+            }
+            .beach-bg {
+                position: static;
+            }
+            .game-container {
+                position: static !important;
+                height: auto !important;
+                min-height: 100vh;
+                width: 100%;
+                flex-direction: column;
+                padding: 15px;
             }
         }
         

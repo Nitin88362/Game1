@@ -34,6 +34,14 @@
             overflow: hidden;
             background-color: #a3e635;
         }
+        
+        @media (max-width: 768px) {
+            body, html {
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto;
+            }
+        }
 
         /* Blurred Farm Background */
         .blurred-bg {
@@ -59,6 +67,14 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .game-wrapper {
+                height: auto;
+                min-height: 100vh;
+                padding: 10px;
+            }
         }
 
         /* Header UI Panel */
@@ -913,6 +929,24 @@
             }
             .fruit-emoji-art {
                 font-size: 30px;
+            }
+        }
+        
+        /* CRITICAL MOBILE OVERFLOW FIX */
+        @media (max-width: 768px) {
+            * {
+                -webkit-overflow-scrolling: touch;
+            }
+            .game-wrapper {
+                position: static;
+                display: flex;
+                flex-direction: column;
+                height: auto;
+            }
+            .board-container {
+                position: static !important;
+                height: auto !important;
+                max-height: none;
             }
         }
         

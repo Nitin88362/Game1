@@ -34,6 +34,14 @@
             overflow: hidden;
             background-color: #a3e635;
         }
+        
+        @media (max-width: 768px) {
+            body, html {
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto;
+            }
+        }
 
         /* Ambient Farm Background styling */
         .game-wrapper {
@@ -46,6 +54,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+        
+        @media (max-width: 768px) {
+            .game-wrapper {
+                height: auto;
+                min-height: 100vh;
+                padding: 10px 0;
+            }
         }
 
         /* Screen States */
@@ -61,6 +77,16 @@
             pointer-events: none;
             transition: opacity 0.5s ease-in-out;
             padding: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .screen {
+                position: relative;
+                height: auto;
+                min-height: 100vh;
+                justify-content: center;
+                padding: 15px;
+            }
         }
 
         .screen.active {
@@ -1060,6 +1086,27 @@
                 width: 40px;
                 height: 40px;
                 font-size: 16px;
+            }
+        }
+        
+        /* CRITICAL MOBILE OVERFLOW FIX */
+        @media (max-width: 768px) {
+            * {
+                -webkit-overflow-scrolling: touch;
+            }
+            .game-wrapper {
+                position: static;
+                display: flex;
+                flex-direction: column;
+            }
+            .screen {
+                position: static !important;
+                height: auto !important;
+                min-height: 100vh;
+                padding: 15px;
+            }
+            .screen.active {
+                display: flex;
             }
         }
         
